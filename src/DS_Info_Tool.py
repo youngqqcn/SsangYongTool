@@ -7,7 +7,10 @@ Description:none
 '''
 
 from collections import OrderedDict
-from lib.mytool6 import TabTextTool
+#from lib.mytool6 import TabTextTool
+from lib.mytool7 import TabTextTool
+#from lib.mytool6 import MyHex
+from lib.mytool7 import MyHexPlus
 
 gFieldNameList = [
 	"NO",
@@ -189,7 +192,45 @@ def MyCounter4(tt):
 
 
 
-def WriteFile(allNamedSplitedList):
+
+
+
+'''
+	def WriteFile(self, outFilePath):
+
+		tmpList = self.allNamedSplitedList
+
+		if len(tmpList) == 0:
+			raise ValueError
+		else:
+			with open(outFilePath, "w") as outFile:
+				for eachLine in tmpList:
+					outFile.write("\n=============\n")
+					for eachFieldName, eachFieldValue in eachLine.items():
+						if "NO-USE" in eachFieldName: continue
+						outFile.write("\t{0}={1}\n".format(
+							eachFieldName, eachFieldValue
+						))
+
+'''
+
+
+def WriteFile(allNamedSplitedList, outFile):
+	'''
+	:param allNamedSplitedList:  重写WriteFile函数, 以公司支持的格式写入
+	:return: 无
+	'''
+	tmpList = allNamedSplitedList
+	if len(tmpList) == 0:
+		raise ValueError
+	else:
+		for eachLine in tmpList:
+			outFile.write("0xFF,0xFF,0xFF,0xFF,{0}\t\t\\\"\n".format(MyHexPlus(eachLine["NO"])))
+			outFile.write("[Netlayer]\t\t\t\t\t\\n\\\n")
+			for key, value in eachLine.items():
+				if "NO-USE" in key: continue
+				outFile.write("\t{0}={1}\t\t\t\t\t\\n\\\n".format(key.strip(), value.strip()))
+			outFile.write("\t\t\t\t\t\\n\"\n\n")
 
 	pass
 
@@ -205,13 +246,17 @@ def main():
 	#MyCounter2(tt)
 	#MyPrintMode33(tt)
 	#MyCounter3(tt)
-	MyCounter4(tt)
+	#MyCounter4(tt)
 
 
 
-	#写入文件
+	#使用类的方法, 写文件
 	#tt.WriteFile("../doc/tmp/out_DS_Info.txt" )
 	#tt.allNamedSplitedList
+
+	#使用自定义方法, 写文件
+	with open("../doc/tmp/out_DS_Info2.txt", "w") as outFile:
+		WriteFile(tt.allNamedSplitedList, outFile )
 
 
 	pass

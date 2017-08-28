@@ -5,6 +5,9 @@ Date:2017/8/25/9:11
 Author:yqq
 Description: 将系数转换为表达式,按模式转换
 '''
+from collections import OrderedDict
+from lib.mytool7 import TextTool
+from lib.mytool7 import MyHexPlus
 
 def Mode1(DsNo, k1, k2, k4, inLen):
 	'''
@@ -73,8 +76,7 @@ def Mode3(DsNo, k4):
 	#关闭:0x55,0x00,0x99,0x99,0x00,0x03
 
 	if len(k4) != 0:
-		retExp = 'string y; BYTE x; if(x&{0}) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";\
-				else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(k4)
+		retExp = r'string y; BYTE x; if(x&{0}) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(k4)
 		return retExp
 	else:
 		print("ECUID:{0} error k4 in Mode3()".format(DsNo))
@@ -96,26 +98,31 @@ def Mode4(DsNo, k2):
 
 
 
-def Mode33(DsNo,  k2, k3, k4, inExp ):
+def Mode33(DsNo,  k2, k3, k4 ):
 	'''
 	:param DsNo: 用于错误定位  
 	:param k2: 
 	:param k3: 
-	:param k4: 
-	:param inExp: 
 	:return:  替换k2后的普通表达式(可以用于数据流算法接口的形式)
-	
 	
 	'''
 
-	retExp = ""
+	#手动写出表达式, 并在表达式中留占位符,获取k2, 再用k2替换那个占位符即可;
 
+	expDict = {}
+	with open("../txt/Mode33.txt", "r") as inFile:
+		for line in inFile.readlines():
+			expDict[line.split('\t\t')[0].strip()] = line.split('\t\t')[1].strip()
 
+	toSearchStr = k3 + ";" +  k4
 
-	#手动写出表达式, 并在表达式中留标识符,获取k2, 再替换那个标识符,即可;
+	if toSearchStr in expDict:
+		tmpExp = expDict[toSearchStr]
+	else:
+		print("{0}({1})is failed to found.".format(DsNo, toSearchStr))
+		raise ValueError
 
-
-	return retExp
+	return  tmpExp.format(k2)  #用k2替换原来的占位符
 
 
 
@@ -138,6 +145,54 @@ def Mode65():
 
 def main():
 
+	'''
+	1.读out_Ds_Info2.txt,获取系数
+	2.调用相应函数生成表达式
+	3.将表达式写入文件
+	'''
+
+	#1.读out_Ds_Info2.txt,获取系数
+	tt = TextTool("../doc/tmp/out_Ds_Info2.txt")
+
+	#tt.ShowAll()
+
+	tmpDict = tt.allSectDictOfFile
+
+	outFile = open("../doc/tmp/out_Express.txt", "w")
+
+	for i in range(303, 1177+1):  #忽略Ecu 为 90001~900010
+		tmpSectKey = "0xFF,0xFF,0xFF,0xFF,{0}".format(MyHexPlus(i))
+		if tmpSectKey in tmpDict:
+
+			tmpDsNo = tmpDict[tmpSectKey]["Netlayer"]["NO"][0]
+			tmpK1 = tmpDict[tmpSectKey]["Netlayer"]["k1"][0]
+			tmpK2 = tmpDict[tmpSectKey]["Netlayer"]["k2"][0]
+			tmpK3 = tmpDict[tmpSectKey]["Netlayer"]["k3"][0]
+			tmpK4 = tmpDict[tmpSectKey]["Netlayer"]["k4"][0]
+			tmpLen = tmpDict[tmpSectKey]["Netlayer"]["Length"][0]
+
+			tmpMode = tmpDict[tmpSectKey]["Netlayer"]["DsMode"][0]
+
+			if tmpMode == '1':
+				retExp = Mode1(tmpDsNo,tmpK1, tmpK2, tmpK4, tmpLen)
+			elif tmpMode == '2':
+				continue
+			elif tmpMode == '3':
+				retExp = Mode3(tmpDsNo, tmpK4)
+			elif tmpMode == '4':
+				continue
+			elif tmpMode == '33':
+				retExp = Mode33(tmpDsNo, tmpK2, tmpK3, tmpK4)
+			elif tmpMode == '64':
+				continue
+			elif tmpMode == '65':
+				continue
+			else:
+				raise ValueError
+
+			outFile.write("{0}\t\t\"{1}\"\n".format(tmpSectKey, retExp))
+
+	outFile.close()
 	pass
 
 

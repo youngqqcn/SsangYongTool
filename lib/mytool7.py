@@ -248,3 +248,17 @@ def MyHex(inArg):
 		print(type(inArg))
 		raise ValueError
 	return "0x" + ("%02x" % tmpInt).upper()
+
+
+def MyHexPlus(inArg):
+	'''
+	:param inArg: 将一个整数(最大255), 或者十进制整数字符串转换为0xAB类型的 
+	:return: 
+	'''
+	tmpStr = hex(int(str(inArg), 10))[2:].upper()
+	if (len(tmpStr) & 1):
+		tmpStr = '0' + tmpStr
+	return Add0x(tmpStr)
+
+
+

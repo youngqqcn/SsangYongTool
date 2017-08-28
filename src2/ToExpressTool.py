@@ -104,6 +104,8 @@ def Mode33(DsNo,  k2, k3, k4, inExp ):
 	:param k4: 
 	:param inExp: 
 	:return:  替换k2后的普通表达式(可以用于数据流算法接口的形式)
+	
+	
 	'''
 
 	retExp = ""

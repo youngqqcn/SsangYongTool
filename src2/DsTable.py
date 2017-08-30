@@ -55,7 +55,7 @@ def GetDsUnit(inDsUnitNo, cnDsDict):
 	pass
 
 
-def WriteDsTable(outFile,*argList):
+def WriteDsTable(outFile, *argList):
 	'''
 	:param outFile: 输出文件
 	:param argList: 可变参数列表; 包含了ecuId, dsName, dsCmd, ctrlByte, ....等数据
@@ -91,7 +91,6 @@ def main():
 			tmpDsMode = tmpDict[sectKey][fieldKey]["DsMode"][0].strip()
 			if int(tmpDsMode, 10) in [2, 4, 64, 65]: #2,4,64模式直接在代码里面实现,不搞算法表达式, 65模式未开发
 				continue
-
 
 			ecuId = tmpDict[sectKey][fieldKey]["EcuID"][0].strip()
 			dsName = GetDsName( tmpDict[sectKey][fieldKey]["DsName"][0].strip() , cnDsDict)

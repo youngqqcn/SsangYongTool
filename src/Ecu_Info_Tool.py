@@ -20,7 +20,7 @@ gFiledKeyList = [
 	"EnterReply",
 	"??Mask1??",
 	"BauteRate",
-	"??????",
+	"AddrCode",
 	"KeepLinkCmd",
 	"??Mask2??",
 	"ReadDtcCmd",

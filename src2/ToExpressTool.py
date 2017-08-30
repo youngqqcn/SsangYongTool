@@ -23,9 +23,9 @@ def Mode1(DsNo, k1, k2, k4, inLen):
 		if "HEX" in k4:
 			retExp = "string y; BYTE x; y=HEX(x);"  #以16进制显示
 		elif ("." in k1) | ("." in k2):
-			retExp = "float y; BYTE x; y={0}*x+{1};".format(k1, k2) #浮点型
+			retExp = "float y; BYTE x; y=({0})*x+({1});".format(k1, k2) #浮点型
 		else:
-			retExp = "int y; BYTE x; y={0}*x+{1};".format(k1, k2) #整型
+			retExp = "int y; BYTE x; y=({0})*x+({1});".format(k1, k2) #整型
 			#还有其他类型??
 		pass
 
@@ -40,9 +40,9 @@ def Mode1(DsNo, k1, k2, k4, inLen):
 
 		#此处用小端, 也就是说, 在数据流代码实现时, 就按普通的方式传入参数即可, 无需改变入参x1, x2的顺序
 		if ("." in k1) | ("." in k2):
-			retExp = "float y; BYTE x1,x2; y=((x2*256)&0xFF00)+(x1&0xFF);" #改成乘法的形式
+			retExp = "float y; BYTE x1,x2; y=(((x2*256)&0xFF00)+(x1&0xFF))*({0})+({1});".format(k1, k2) #改成乘法的形式
 		else:
-			retExp = "int y; BYTE x1,x2; y=((x2*256)&0xFF00)+(x1&0xFF);" #改成乘法的形式
+			retExp = "int y; BYTE x1,x2; y=(((x2*256)&0xFF00)+(x1&0xFF))*({0})+({1});".format(k1, k2) #改成乘法的形式
 		pass
 	else:
 		print("NO{0} : Error in inLen ".format(DsNo))
@@ -76,7 +76,7 @@ def Mode3(DsNo, k4):
 	#关闭:0x55,0x00,0x99,0x99,0x00,0x03
 
 	if len(k4) != 0:
-		retExp = r'string y; BYTE x; if(x&{0}) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(k4)
+		retExp = r'string y; BYTE x; if(x&({0})) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(k4)
 		return retExp
 	else:
 		print("ECUID:{0} error k4 in Mode3()".format(DsNo))
@@ -114,12 +114,11 @@ def Mode33(DsNo,  k2, k3, k4 ):
 		for line in inFile.readlines():
 			expDict[line.split('\t\t')[0].strip()] = line.split('\t\t')[1].strip()
 
-	toSearchStr = k3 + ";" +  k4
-
-	if toSearchStr in expDict:
-		tmpExp = expDict[toSearchStr]
+	tmpKey= k3 + ";" +  k4     #组成键值
+	if tmpKey in expDict:
+		tmpExp = expDict[tmpKey]
 	else:
-		print("{0}({1})is failed to found.".format(DsNo, toSearchStr))
+		print("{0}({1})is failed to found.".format(DsNo, tmpKey))
 		raise ValueError
 
 	return  tmpExp.format(k2)  #用k2替换原来的占位符

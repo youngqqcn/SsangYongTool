@@ -15,13 +15,16 @@ def IsOk(inStr):
 	if (inStr.count(r'\"') & 1) != 0: #检查\"
 		print("\\\"is not match")
 		return False
-	if (inStr.count(r'(') != inStr.count(r')')):  #检查括号
+	if (inStr.count(r'(') != inStr.count(r')')):  #检查括号是否匹配
 		print("() in not match")
 		return False
 
 	return True
 
 	pass
+
+
+
 
 
 def main():

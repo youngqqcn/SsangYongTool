@@ -135,12 +135,12 @@ class TabTextTool:
 
 	def __init__(self, inFilePath, inFieldNameList=list()):
 		self.inFilePath = inFilePath
-		self.allSplitedLineList = self.ReadTabFile(inFilePath)
+		self.allSplitedLineList = self.__ReadTabFile(inFilePath)
 		self.allNamedSplitedList = []
 		if len(inFieldNameList) > 0:
-			self.allNamedSplitedList = self.AddFieldName(self.allSplitedLineList, inFieldNameList)
+			self.allNamedSplitedList = self.__AddFieldName(self.allSplitedLineList, inFieldNameList)
 
-	def ReadTabFile(self, inFilePath):
+	def __ReadTabFile(self, inFilePath):
 		'''
 		:param inFilePath: 输入文件路径
 		:return: 
@@ -163,7 +163,7 @@ class TabTextTool:
 		return retList
 
 
-	def AddFieldName(self, allSplitedLineList, inFieldNameList):
+	def __AddFieldName(self, allSplitedLineList, inFieldNameList):
 		'''
 		:param allSplitedLineList:  
 		:param inFieldNameList: 数据结构 : [{field1:value1, filed2:value2, ....}, {}, {},....]
@@ -178,7 +178,7 @@ class TabTextTool:
 				# 引发一个自定义异常
 				print(len(eachLine))
 				print(len(inFieldNameList))
-				raise self.LengthNotMatchError(inFieldNameList)
+				raise self.LengthNotMatchError(inFieldNameList)   #key的数量和value的数量不匹配,异常
 
 			tmpLineDict = OrderedDict()
 			for i in range(len(eachLine)):
@@ -206,9 +206,6 @@ class TabTextTool:
 					for eachFieldName, eachFieldValue in eachLine.items():
 						if "NO-USE" in eachFieldName: continue
 						outFile.write("\t{0}={1}\n".format(eachFieldName, eachFieldValue))
-					pass
-				pass
-			pass
 		pass
 
 
@@ -224,12 +221,18 @@ class TabTextTool:
 
 
 class RootMenu:
+	'''
+	RootMenu说明: 使用此类时, root菜单文件的首行必须是"车名", 
+	             如果有多个"车"(不是车型), 则只要把
+	             __init__函数中, lineList.remove(lineList[0]) 注释掉即可
+	'''
 
 	def __init__(self, inFilePath, isOrder=True):
 		if os.path.isfile(inFilePath):
 			with open(inFilePath, "r") as inFile:
 				lineList = inFile.readlines()
-				lineList.remove(lineList[0]) #去掉首行的车名
+
+				#lineList.remove(lineList[0]) #去掉首行的车名, 如果有多个车(不是车型, 如: 高低配),注释这句即可
 
 				self.__isOrder = isOrder  #True表示按照插入顺序排序(速度慢), False则为无序(速度快)
 				if self.__isOrder:
@@ -261,7 +264,6 @@ class RootMenu:
 		if self.__IsLeafNode(nodeList[0]):  # 1.如果是叶子节点, 将此节点挂在其父节点下面; --->递归边界条件
 			inDict[self.__GetLeafNodeNameAndID(nodeList[0])[0]] = [self.__GetLeafNodeNameAndID(nodeList[0])[1]]
 			nodeList.remove(nodeList[0])
-			self.__AddMenuItem(inDict, nodeList)
 		else:
 			if self.__isOrder:
 				tmpDict = OrderedDict()  #有序字典
@@ -274,7 +276,7 @@ class RootMenu:
 			self.__AddMenuItem(tmpDict, subNodeList)  # 2.将此节点下的所有子节点挂上来
 			inDict[tmpNode.strip()] = tmpDict  # 再把此节点挂在其父节点上
 
-			self.__AddMenuItem(inDict, nodeList)  # 3.再处理其他的节点
+		self.__AddMenuItem(inDict, nodeList)  # 3.再处理其他的节点
 
 		pass
 

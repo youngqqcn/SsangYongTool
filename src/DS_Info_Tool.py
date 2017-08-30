@@ -225,6 +225,8 @@ def WriteFile(allNamedSplitedList, outFile):
 		raise ValueError
 	else:
 		for eachLine in tmpList:
+			if int(eachLine["EcuID"].strip(), 10) <= 900010:  #匹配没有开发的
+				continue
 			outFile.write("0xFF,0xFF,0xFF,0xFF,{0}\t\t\\\"\n".format(MyHexPlus(eachLine["NO"])))
 			outFile.write("[Netlayer]\t\t\t\t\t\\n\\\n")
 			for key, value in eachLine.items():

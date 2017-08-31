@@ -9,6 +9,7 @@ Description:none
 import os
 import sys
 from lib.mytool6 import MyHex
+from src3.ComPin import ComPin   #计算引脚
 
 
 gFiledKeyList = [
@@ -22,7 +23,7 @@ gFiledKeyList = [
 	"BauteRate",
 	"AddrCode",
 	"KeepLinkCmd",
-	"??Mask2??",
+	"ComPin",
 	"ReadDtcCmd",
 	"DtcReply",
 	"DtcBegin",

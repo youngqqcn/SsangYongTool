@@ -238,6 +238,38 @@ def WriteFile(allNamedSplitedList, outFile):
 
 
 
+
+def CountMode3(tt):
+	'''
+	:param tt: 统计模式3的种类
+	:return: 
+	'''
+	tmpList = tt.allNamedSplitedList
+
+
+	tmpStrList = []
+	for eachLine in tmpList:
+		if "DsMode" in eachLine:
+			mode = eachLine["DsMode"]
+			if mode == '3':
+				tmpStr = eachLine["k1"] +"," + eachLine["k2"]+"," + eachLine["k3"] +","+ eachLine["k4"]
+				if tmpStr not in tmpStrList:
+					tmpStrList.append(tmpStr)
+					print("{0}={1}".format(eachLine['NO'], tmpStr))
+				#
+				# print("====================")
+				# print("{0}={1}".format('DsNo', eachLine['NO']))
+				# print("{0}={1}".format('EcuID', eachLine['EcuID']))
+				# print("{0}={1}".format('k1', eachLine['k1']))
+				# print("{0}={1}".format('k2', eachLine['k2']))
+				# print("{0}={1}".format('k3', eachLine['k3']))
+				# print("{0}={1}".format('k4', eachLine['k4']))
+				# print("{0}={1}".format('DsMode', eachLine['DsMode']))
+	pass
+
+
+
+
 def main():
 
 	tt = TabTextTool("../txt/DS_Info.txt", gFieldNameList)
@@ -250,6 +282,9 @@ def main():
 	#MyCounter3(tt)
 	#MyCounter4(tt)
 
+	CountMode3(tt)
+
+
 
 
 	#使用类的方法, 写文件
@@ -257,8 +292,8 @@ def main():
 	#tt.allNamedSplitedList
 
 	#使用自定义方法, 写文件
-	with open("../doc/tmp/out_DS_Info2.txt", "w") as outFile:
-		WriteFile(tt.allNamedSplitedList, outFile )
+	#with open("../doc/tmp/out_DS_Info2.txt", "w") as outFile:
+	#	WriteFile(tt.allNamedSplitedList, outFile )
 
 
 	pass

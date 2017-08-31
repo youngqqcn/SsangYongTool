@@ -11,7 +11,7 @@ Description: 解通信引脚
 from Tkinter import *
 
 
-def ComPin(inVar):
+def CalcComPin(inVar):
 	'''
 	:param inVar: 输入引脚, 如 0x0800 表示引脚14
 	:return: 解出来的引脚 14
@@ -30,17 +30,30 @@ def ComPin(inVar):
 	else:
 		tmpStr = inVar
 	if tmpStr == '':
-		print('helleo')
+		print('CalcComPin() Error')
+		raise ValueError
 
 	if int(tmpStr, 16) in tmpDict:
 		return str(tmpDict[int(tmpStr, 16)])
 	else:
-		return 'Error'
+		#return 'Error'
+		raise ValueError
 	pass
 
-def GetComPin(event):
 
-	outVar1.set(ComPin(inVar1.get()))
+def SetOutVar():
+
+	outVar1.set(CalcComPin(inVar1.get()))  #显示计算出来的引脚
+
+	pass
+
+
+def GetComPin(event):
+	'''
+	:param event:  回车
+	:return: 
+	'''
+	SetOutVar()
 
 	pass
 
@@ -56,7 +69,7 @@ if __name__ == '__main__':
 	Label(f1, text="输入:").pack(side=LEFT)
 	inVar1 = StringVar()
 	e1 = Entry(f1, textvariable=inVar1)
-	e1.bind('<Key-Return>', GetComPin)
+	e1.bind('<Key-Return>', GetComPin) #回车
 	e1.pack(side=RIGHT)
 	f1.pack(side=TOP)
 
@@ -67,7 +80,7 @@ if __name__ == '__main__':
 	f2.pack(side=TOP)
 
 	f3 = Frame(rF1, pady=5)
-	Button(f3, text="确定", command=GetComPin, width=10).pack(side=RIGHT)
+	Button(f3, text="确定", command=SetOutVar, width=10).pack(side=RIGHT)
 	f3.pack(side=TOP)
 
 	rF1.pack(side=LEFT)

@@ -7,7 +7,7 @@ Description:生成模拟平台的数据
 '''
 
 from lib.mytool7 import *
-from src3.ComPin import ComPin    #计算引脚
+from src3.ComPin import CalcComPin    #计算引脚的算法
 
 
 gKwpHeaderStr = '''\
@@ -46,7 +46,14 @@ gCanHeaderStr = '''\
 
 
 
-def GetHistoryData(inEcuId ):
+
+def GetHistoryCmdData(inEcuId ):
+	'''
+	:param inEcuId: ecuID     
+	:return: 
+	#如果需要重新生成平台数据, 又要保留原来的"命令数据"(不含底层配置信息),
+	#只要将txt/byEcu目录下的文件替换掉为原来的文件即可
+	'''
 
 	retList = []
 	with open("../txt/byEcu/{0}.txt".format(inEcuId), "r") as inFile:
@@ -78,19 +85,26 @@ def main():
 			if int(ecuId, 10) <= 900010:continue
 			protName = tmpDict[sectKey][fieldKey]["ProtocolName"][0].strip()
 			bauteRate = tmpDict[sectKey][fieldKey]["BauteRate"][0].strip()
+
+			# 其中900041的引脚为空,经过检测,是13引脚,且已验证(在Ecu_Info.txt中手动添加了)
 			comPin =  tmpDict[sectKey][fieldKey]["ComPin"][0].strip()
+
 			if comPin == '':
 				print(ecuId)
 			if "KWP" in protName.upper(): #KWP????
-				header = gKwpHeaderStr.format(bauteRate, ComPin(comPin))
+				header = gKwpHeaderStr.format(bauteRate, CalcComPin(comPin))  #ComPin函数计算引脚
 			elif "CAN" in protName.upper():
 				header = gCanHeaderStr.format(bauteRate)
 			else: #其他协议
 				continue
+
+			#重新生成的平台数据在"../doc/out_CarData/"目录下
 			with open("../doc/out_CarData/{0}.txt".format(ecuId), "w") as outFile:
 				outFile.write(header + "\n")
-				retList = GetHistoryData(ecuId)
-				outFile.writelines(retList) #写入原始数据
+
+				#写入原来的平台数据(除底层配置信息以外)
+				# 如果不想保留原来平台数据,注释此句即可
+				outFile.writelines(GetHistoryCmdData(ecuId))
 
 	pass
 

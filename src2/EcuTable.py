@@ -184,7 +184,6 @@ def	ReadEcuParam(carName, sysName, ecuName, eachEcuId, outFile):
 		elif filedDict["ProtocolName"][0] == "CAN":
 			outFile.write("{0}\t".format("6,14"))
 
-
 			outFile.write("{0}\t".format(" ")) #k地址, 留白
 			outFile.write("{0}\t".format(GetCanEcuAddr(filedDict["EnterCmd"][0]))) #CanEcu地址
 			outFile.write("{0}\t".format(GetCanToolAddr(filedDict["EnterReply"][0]))) #CanTool地址

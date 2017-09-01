@@ -28,7 +28,7 @@ gFiledKeyList = [
 	"DtcReply",
 	"DtcBegin",
 	"DtcLen",
-	"DtcShowMode",
+	"???Mode???",
 	"??Mode??",
 	"ClearDtcCmd",
 	"ClearReply",
@@ -52,6 +52,8 @@ def ReadTabTextFile(filePath):
 				if '\t' in eachLine:
 					splitedList = eachLine.split("\t")
 					print("==================")
+					if int(splitedList[2], 10) <= 900010:  #屏蔽小于等于900010的(没开发)
+						continue
 					indexStr = MyHex(int(splitedList[2], 10) - 900000)
 					outFile.write("0xFF,0xFF,0xFF,0xFF,0xFF,{0}\t\t\"\\\n".format(indexStr))
 					outFile.write("[Netlayer]\t\t\t\t\t\\n\\\n")

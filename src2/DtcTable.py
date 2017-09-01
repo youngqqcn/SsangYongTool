@@ -18,8 +18,8 @@ from lib.mytool6 import TextTool
 
 def ReadText2(inFilePath):
 	'''
-		:param inFilePath: 读inFilePath文件, 如CN_TEXT.txt
-		:return: 返回一个字典(按插入顺序排序)
+	:param inFilePath: 读inFilePath文件, 如CN_TEXT.txt
+	:return: 返回一个字典(按插入顺序排序)
 	'''
 	if os.path.isfile(inFilePath):
 		with open(inFilePath, "r") as lan:

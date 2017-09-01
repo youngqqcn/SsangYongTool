@@ -58,12 +58,14 @@ def GetDsUnit(inDsUnitNo, cnDsDict):
 def WriteDsTable(outFile, *argList):
 	'''
 	:param outFile: 输出文件
-	:param argList: 可变参数列表; 包含了ecuId, dsName, dsCmd, ctrlByte, ....等数据
+	:param argList: 可变参数列表; 包含了ecuId, dsName, dsCmd,  ....等数据
 	:return: 无
 	'''
 
 	#如果文本库是GB2312编码,打开以下注释即可,输出文件是utf-8
 	for arg in argList[:-1]: #除了最后一个
+		if len(arg) == 0: #为空
+			arg = "  "  #设置为空格填充,保证excel表格的整体格式
 		outFile.write("{0}\t".format(arg.decode('gb2312').encode('utf8')))
 	outFile.write("{0}\n".format(argList[-1:][0]).decode('gb2312').encode('utf-8')) #最后一个后面是换行符
 
@@ -82,25 +84,35 @@ def main():
 	cnDsDict = ReadText("../txt/cn_ds.txt")
 
 	outFile = open("../doc/tmp/out_Ds_Table.txt", "w")
-	outFile.write("ECUID\t数据流名称\t数据流命令\t控制字节\t长度\t算法表达式\t单位\n")
+	#outFile.write("ECUID\t数据流名称\t数据流命令\t控制字节\t长度\t算法表达式\t单位\n")
 
 	tmpDict = tt.allSectDictOfFile
 	for sectKey in tmpDict:
 		for fieldKey in tmpDict[sectKey]:
 
 			tmpDsMode = tmpDict[sectKey][fieldKey]["DsMode"][0].strip()
-			if int(tmpDsMode, 10) in [2, 4, 64, 65]: #2,4,64模式直接在代码里面实现,不搞算法表达式, 65模式未开发
-				continue
 
 			ecuId = tmpDict[sectKey][fieldKey]["EcuID"][0].strip()
 			dsName = GetDsName( tmpDict[sectKey][fieldKey]["DsName"][0].strip() , cnDsDict)
 			dsCmd = tmpDict[sectKey][fieldKey]["DsCmd"][0].strip()
 			ctrlByte = tmpDict[sectKey][fieldKey]["CtrlByte"][0].strip()
 			length = tmpDict[sectKey][fieldKey]["Length"][0].strip()
-			dsExpress = expDict[sectKey] #数据流算法索引就是sectKey
+			dsMode = tmpDict[sectKey][fieldKey]["DsMode"][0].strip()
+			k1 = tmpDict[sectKey][fieldKey]["k1"][0].strip()
+			k2 = tmpDict[sectKey][fieldKey]["k2"][0].strip()
+			k3 = tmpDict[sectKey][fieldKey]["k3"][0].strip()
+			k4 = tmpDict[sectKey][fieldKey]["k4"][0].strip()
+
+			if int(tmpDsMode, 10) in [2, 4, 64, 65]: #2,4,64模式直接在代码里面实现,不搞算法表达式, 65模式未开发
+				if int(tmpDsMode, 10) == 65: #65模式未开发
+					continue
+				dsExpress = u"在实现代码里面实现".encode('gb2312')
+			else:
+				dsExpress = expDict[sectKey] #数据流算法索引就是sectKey
 			dsUnit = GetDsUnit( tmpDict[sectKey][fieldKey]["DsUnit"][0].strip(), cnDsDict)
 
-			WriteDsTable(outFile, ecuId, dsName, dsCmd, ctrlByte, length, dsExpress, dsUnit)
+			WriteDsTable(outFile, ecuId, dsName, dsCmd, ctrlByte, length,\
+			             dsMode, k1, k2, k3, k4, dsExpress, dsUnit)
 			pass
 	outFile.close()
 	pass

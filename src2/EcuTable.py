@@ -11,6 +11,7 @@ from lib.mytool6 import MyHex
 from lib.mytool6 import Add0x
 from lib.mytool6 import Del0x
 from collections import OrderedDict
+from src3.ComPin import CalcComPin
 
 def ReadRootMenuFile(inFilePath):
 	'''
@@ -99,6 +100,42 @@ def ReadRootMenuFile(inFilePath):
 
 
 
+def GetKAddr(inKwpEnterCmd):
+	'''
+	:param inKwpEnterCmd: kwp系统进入命令
+	:return: k地址
+	'''
+	#8101F381F6
+	if len(inKwpEnterCmd) == 0:
+		return "?"
+		#raise ValueError
+
+	return  inKwpEnterCmd[4:5+1] +  inKwpEnterCmd[2:3+1]   #返回 F301
+
+
+def GetCanEcuAddr(inCanEnterCmd):
+	'''
+	:param inCanEnterCmd:  can协议系统进入命令
+	:return: Can协议的ecu地址
+	'''
+	#07C5021081
+	if len(inCanEnterCmd) == 0:
+		return  "?"
+		#raise ValueError
+	return inCanEnterCmd[ : 4] #07C5
+
+def GetCanToolAddr(inCanReplyCmd):
+	'''
+	:param inCanReplyCmd: can协议系统进入命令的回复
+	:return: Tool地址
+	'''
+	#07CD5081
+	if len(inCanReplyCmd) == 0:
+		return "?"
+		#raise ValueError
+	return inCanReplyCmd[ : 4]   #07CD
+
+
 
 def	ReadEcuParam(carName, sysName, ecuName, eachEcuId, outFile):
 	'''
@@ -135,16 +172,31 @@ def	ReadEcuParam(carName, sysName, ecuName, eachEcuId, outFile):
 
 
 		# 引脚
-		if filedDict["ProtocolName"][0] == "KWP2000":
-			outFile.write("{0}\t".format("7"))
-		elif filedDict["ProtocolName"][0] == "CAN":
-			outFile.write("{0}\t".format("6,E"))
-		else:
-			outFile.write("{0}\t".format("?"))
+		#if filedDict["ProtocolName"][0] == "KWP2000":
+		#KWP2000, KWP2000(5bps), KWP_0x 三种KWP协议的都可以计算引脚
+		if "KWP" in filedDict["ProtocolName"][0]:
+			#outFile.write("{0}\t".format("7"))
+			outFile.write("{0},{0}\t".format(CalcComPin(filedDict["ComPin"][0])))
 
-		outFile.write("{0}\t".format("?")) #k地址
-		outFile.write("{0}\t".format("?")) #CanEcu地址
-		outFile.write("{0}\t".format("?")) #CanTool地址
+			outFile.write("{0}\t".format(GetKAddr(filedDict["EnterCmd"][0]))) #k地址
+			outFile.write("{0}\t".format("   ")) #CanEcu地址,留白
+			outFile.write("{0}\t".format("   ")) #CanTool地址,留白
+		elif filedDict["ProtocolName"][0] == "CAN":
+			outFile.write("{0}\t".format("6,14"))
+
+
+			outFile.write("{0}\t".format(" ")) #k地址, 留白
+			outFile.write("{0}\t".format(GetCanEcuAddr(filedDict["EnterCmd"][0]))) #CanEcu地址
+			outFile.write("{0}\t".format(GetCanToolAddr(filedDict["EnterReply"][0]))) #CanTool地址
+		else:
+			outFile.write("{0}\t".format("  "))
+			outFile.write("{0}\t".format("  "))
+			outFile.write("{0}\t".format("  "))
+
+		#outFile.write("{0}\t".format("?")) #k地址
+		#outFile.write("{0}\t".format("?")) #CanEcu地址
+		#outFile.write("{0}\t".format("?")) #CanTool地址
+
 
 		if "EnterCmd" in filedDict:
 			if filedDict["EnterCmd"][0] == "":

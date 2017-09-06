@@ -65,7 +65,7 @@ def Mode2(DsNo, k1, k2, k3, k4):
 	pass
 
 
-def Mode3(DsNo, k4):
+def Mode3(DsNo, k1, k4):
 	'''
 	:param DsNo: 编号,用于错误定位 
 	:param k4: 控制位,  x & 0x04 != 0  
@@ -75,12 +75,32 @@ def Mode3(DsNo, k4):
 	#开启:0x55,0x00,0x99,0x99,0x00,0x04
 	#关闭:0x55,0x00,0x99,0x99,0x00,0x03
 
-	if len(k4) != 0:
-		retExp = r'string y; BYTE x; if(x&({0})) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(k4)
-		return retExp
+	if k1 == '1':
+		if len(k4) != 0:
+			retExp = r'string y; BYTE x; if(x&({0})) y=\"0x55,0x00,0x99,0x99,0x00,0x04\";else y=\"0x55,0x00,0x99,0x99,0x00,0x03\";'.format(
+				k4)
+			return retExp
+		else:
+			print("ECUID:{0} error k4 in Mode3()".format(DsNo))
+			raise ValueError
 	else:
-		print("ECUID:{0} error k4 in Mode3()".format(DsNo))
-		raise ValueError
+		#读取../txt/Mode3.txt  获取k1对应的算法表达式,并用k4替换表达式中{0}
+		#其中,k1=310的两个ecu要特殊处理, 其k4分别为 0xF 和 0xF0
+
+		#此处不需要考虑运行效率(每次都重新打开文件,重新获取,重新查询)
+		with open("../txt/Mode3.txt", "r") as inFile:
+			lineList = inFile.readlines()
+			for line in lineList:
+				if len(line) == 0: continue  #空行
+				if k1 == line.split('\t\t')[0].strip():
+					if(k1 == '310') & (DsNo == '642'): #310的两个ecu特殊处理
+						return line.split('\t\t')[2].strip()  #表达式
+
+					if '{0}' in line.split('\t\t')[1].strip(): #如果表达式中有{0} 占位符, 则用k4替之
+						return line.split('\t\t')[1].strip().format(k4)
+					return line.split('\t\t')[1].strip().format(k4)
+			print("{0} -> not found express".format(k1))
+			raise ValueError
 	pass
 
 
@@ -163,21 +183,21 @@ def main():
 		tmpSectKey = "0xFF,0xFF,0xFF,0xFF,{0}".format(MyHexPlus(i))
 		if tmpSectKey in tmpDict:
 
-			tmpDsNo = tmpDict[tmpSectKey]["Netlayer"]["NO"][0]
-			tmpK1 = tmpDict[tmpSectKey]["Netlayer"]["k1"][0]
-			tmpK2 = tmpDict[tmpSectKey]["Netlayer"]["k2"][0]
-			tmpK3 = tmpDict[tmpSectKey]["Netlayer"]["k3"][0]
-			tmpK4 = tmpDict[tmpSectKey]["Netlayer"]["k4"][0]
-			tmpLen = tmpDict[tmpSectKey]["Netlayer"]["Length"][0]
+			tmpDsNo = tmpDict[tmpSectKey]["Netlayer"]["NO"][0].strip()
+			tmpK1 = tmpDict[tmpSectKey]["Netlayer"]["k1"][0].strip()
+			tmpK2 = tmpDict[tmpSectKey]["Netlayer"]["k2"][0].strip()
+			tmpK3 = tmpDict[tmpSectKey]["Netlayer"]["k3"][0].strip()
+			tmpK4 = tmpDict[tmpSectKey]["Netlayer"]["k4"][0].strip()
+			tmpLen = tmpDict[tmpSectKey]["Netlayer"]["Length"][0].strip()
 
-			tmpMode = tmpDict[tmpSectKey]["Netlayer"]["DsMode"][0]
+			tmpMode = tmpDict[tmpSectKey]["Netlayer"]["DsMode"][0].strip()
 
 			if tmpMode == '1':
 				retExp = Mode1(tmpDsNo,tmpK1, tmpK2, tmpK4, tmpLen)
 			elif tmpMode == '2':
 				continue
 			elif tmpMode == '3':
-				retExp = Mode3(tmpDsNo, tmpK4)
+				retExp = Mode3(tmpDsNo, tmpK1, tmpK4)
 			elif tmpMode == '4':
 				continue
 			elif tmpMode == '33':

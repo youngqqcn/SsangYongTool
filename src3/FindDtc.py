@@ -84,7 +84,8 @@ def main():
 		#if (tmpEcuID == 900011):
 			#print(">" + str(tmpDtcNo))
 		if ('0x55,0x43,0x67,0xA0,' + MyHexPlusPlus(tmpDtcNo, 2)) in retDict2:
-			print("{0}>2:{1}".format(tmpEcuID, tmpDtcNo))
+			if tmpEcuID in firstSet:
+				print("{0}>2:{1}".format(tmpEcuID, tmpDtcNo))
 			secondSet.add(tmpEcuID)
 			if tmpEcuID not in countDict2:
 				countDict2[tmpEcuID] = 1
@@ -103,6 +104,7 @@ def main():
 					# print('0x55,0x05,0x06,0x00,' + Add0x(tmpDtcCode) )
 					# print('0x55,0x43,0x67,0xA0,' + MyHexPlusPlus(tmpDtcNo, 2))
 					print("----------")
+		print("+++++++++++++++++++++++")
 
 	#print("Count is :" + str(Count))
 	#print("CountEcuID is : {0}".format(len(countList)))
@@ -126,7 +128,7 @@ def main():
 		print(eachEcuId)
 
 	print("只有第二种的个数:{0}".format(len(secondSet - firstSet)))
-	print("只有第二种的:")
+	print("只有第二种    的:")
 	for eachEcuId in (secondSet - firstSet): #只有第一种
 		print(eachEcuId)
 	pass

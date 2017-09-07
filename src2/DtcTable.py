@@ -77,6 +77,7 @@ def ReadDtcFile(dtcTextDict, outFile, dtcCmdDict):
 	tt = TabTextTool("../txt/Ecu_Dtc.txt", keyNameList)
 	#tt.ShowAll()
 
+	countEcuIdList = []
 	for eachLineDict in tt.allNamedSplitedList:
 
 		tmpEcuId = eachLineDict["EcuID"].strip()
@@ -100,6 +101,8 @@ def ReadDtcFile(dtcTextDict, outFile, dtcCmdDict):
 			continue
 		if tmpEcuId in dtcCmdDict:
 			tmpDtcCmd = dtcCmdDict[tmpEcuId]
+			if tmpEcuId not in countEcuIdList:
+				countEcuIdList.append(tmpEcuId)
 		else:
 			#print(tmpEcuId) #[900025, 900026, 900027]
 			continue
@@ -107,6 +110,8 @@ def ReadDtcFile(dtcTextDict, outFile, dtcCmdDict):
 		outFile.write("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\n".format(
 			tmpEcuId, tmpPcbuCode, tmpDtcText, tmpDtcCmd, tmpDtcCode, tmpDtcNo
 		))
+
+	print(len(countEcuIdList))
 
 	pass
 

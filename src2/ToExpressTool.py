@@ -59,7 +59,7 @@ def Mode2(DsNo, k1, k2, k3, k4):
 	:param k2: 
 	:param k3: 
 	:param k4: 
-	:return:     协议有问题,进不了系统
+	:return:    已经解析出来，见分析文档; 在代码里面实现; 部分协议有问题,进不了系统;
 	'''
 
 	pass

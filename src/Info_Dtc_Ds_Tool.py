@@ -36,7 +36,6 @@ gDtcFiledNameList = [
 		"EcuId",
 		"DtcNo",
 		"OtherNo",
-		"???2"
 ]
 
 gDsFieldNameList = [
@@ -111,13 +110,17 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 	#            ...
 	#         }
 
-	for intEcuID in range(900001, 900061+1):
+	for intEcuID in range(900011, 900061+1):
+
+		if intEcuID in [900025, 900026, 900027]:
+			continue
 
 		ecuId = str(intEcuID)
 		with open("../doc/out_SsangYong/"+ ecuId + ".txt", "w") as outFile:
 
 			#写入版本信息数据
 			outFile.write("0xFF,0xFF,0xFF,0xFF,0xFF,0x00\t\t\"\\\n")
+			outFile.write("[Data]\t\t\t\t\t\\n\\\n")
 			if ecuId in inVerDict:
 				iCount = 0
 				outFile.write("\tInfoNum={0}\t\t\\n\\\n".format(len(inVerDict[ecuId]))) #版本信息命令条数
@@ -139,13 +142,14 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 
 			#写入故障码数据
 			outFile.write("0xFF,0xFF,0xFF,0xFF,0xFF,0x01\t\t\"\\\n")
+			outFile.write("[Data]\t\t\t\t\t\\n\\\n")
 			if ecuId in inDtcDict:
 				iCount = 0
 				outFile.write("\tDtcNum={0}\t\t\\n\\\n".format(len(inDtcDict[ecuId]))) #故障码条数
 				for eachDtcDict in inDtcDict[ecuId]:
 					outFile.write("\tDtc{0}=".format(iCount))
 					outFile.write("{0},{1}\t\t\\n\\\n".format(
-						eachDtcDict["DtcNo"], eachDtcDict["OtherNo"]
+						eachDtcDict["DtcNo"].strip(), eachDtcDict["OtherNo"].strip()
 					))
 					iCount += 1
 			else:
@@ -174,16 +178,16 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 			# 	'''
 
 			outFile.write("0xFF,0xFF,0xFF,0xFF,0xFF,0x02\t\t\"\\\n")
+			outFile.write("[Data]\t\t\t\t\t\\n\\\n")
 			if ecuId in inDsDict:
 				iCount = 0
 				outFile.write("\tDsNum={0}\t\t\\n\\\n".format(len(inDsDict[ecuId]))) #故障码条数
 				for eachDsDict in inDsDict[ecuId]:
 					outFile.write("\tDs{0}=".format(iCount))
-					outFile.write("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}\t\t\\n\\\n".format(
-						eachDsDict["DsName"], eachDsDict["DsCmd"], eachDsDict["Reply"], eachDsDict["CtrlByte"],
-						eachDsDict["Length"], eachDsDict["k1"], eachDsDict["k2"], eachDsDict["k3"],
-						eachDsDict["k4"], eachDsDict["DsMode"], eachDsDict["????4"], eachDsDict["????5"],
-						eachDsDict["????6"]
+					outFile.write("{0},{1},{2},{3},{4},{5},{6}\t\t\\n\\\n".format(
+						eachDsDict["NO"], eachDsDict["DsName"], eachDsDict["DsCmd"],
+						eachDsDict["Reply"], eachDsDict["CtrlByte"], eachDsDict["Length"],
+						eachDsDict["DsMode"],
 					))
 					iCount += 1
 			else:

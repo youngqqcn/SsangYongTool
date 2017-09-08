@@ -21,7 +21,6 @@ def IsOk(inStr):
 
 	return True
 
-	pass
 
 
 def main():

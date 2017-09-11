@@ -22,7 +22,8 @@ gFieldKeyNameList = [
 	"????1",
 ]
 
-gRetDict = ReadText("../txt/cn_text.txt")
+#gRetDict = ReadText("../txt/cn_text.txt")
+gRetDict = ReadText("../txt/EN_TEXT.txt")  #英文root菜单
 
 
 
@@ -139,8 +140,9 @@ def main():
 
 	tt = TabTextTool("../txt/Ecu_Select.txt", gFieldKeyNameList)
 
-	outFile = open("../doc/tmp/out_Ecu_Select.txt", "w")
-	outFile.write("out_SsangYong\n")
+	#outFile = open("../doc/tmp/out_Ecu_Select.txt", "w")
+	outFile = open("../doc/tmp/out_EN_Ecu_Select.txt", "w")  #英文root菜单
+	outFile.write("SsangYong\n")
 
 	myDict = OrderedDict()
 

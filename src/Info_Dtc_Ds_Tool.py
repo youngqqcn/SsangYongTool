@@ -126,6 +126,15 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 				outFile.write("\tInfoNum={0}\t\t\\n\\\n".format(len(inVerDict[ecuId]))) #版本信息命令条数
 				for eachInfoDict in inVerDict[ecuId]:
 					outFile.write("\tInfo{0}=".format(iCount))
+
+
+					# 处理版本信息命令
+					if eachInfoDict["VerCmd"].strip()[0] == "8":
+						eachInfoDict["VerCmd"] = eachInfoDict["VerCmd"].strip()[6 : -2]
+					if eachInfoDict["VerCmd"].strip()[0:2] == "07":
+						eachInfoDict["VerCmd"] = eachInfoDict["VerCmd"].strip()[6 : ]
+
+
 					outFile.write("{0},{1},{2},{3}\t\t\\n\\\n".format(
 						eachInfoDict["???2"], eachInfoDict["VerCmd"],
 						eachInfoDict["VerReply"],
@@ -184,6 +193,15 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 				outFile.write("\tDsNum={0}\t\t\\n\\\n".format(len(inDsDict[ecuId]))) #故障码条数
 				for eachDsDict in inDsDict[ecuId]:
 					outFile.write("\tDs{0}=".format(iCount))
+
+
+					# 处理数据流命令
+					if eachDsDict["DsCmd"].strip()[0] == "8":  #KWP协议
+						eachDsDict["DsCmd"] = eachDsDict["DsCmd"].strip()[6: -2]
+					if eachDsDict["DsCmd"].strip()[0:2] == "07": #CAN协议
+						eachDsDict["DsCmd"] = eachDsDict["DsCmd"].strip()[6:]
+
+
 					outFile.write("{0},{1},{2},{3},{4},{5},{6}\t\t\\n\\\n".format(
 						eachDsDict["NO"], eachDsDict["DsName"], eachDsDict["DsCmd"],
 						eachDsDict["Reply"], eachDsDict["CtrlByte"], eachDsDict["Length"],

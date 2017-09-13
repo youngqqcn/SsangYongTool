@@ -170,37 +170,39 @@ def ReadTabTextFile(filePath):
 						print("{0}={1}".format("\t" + gFiledKeyList[i], splitedList[i]))
 
 						#2017-09-11 加上两个自定义的字段, EcuId 和 ToolId
-						if gFiledKeyList[i] == "EnterCmd":
-							if splitedList[3].strip() == "CAN":
-								EcuID = splitedList[i].strip()[:4]
-								ToolID = splitedList[i+1].strip()[:4]
-								outFile.write("\tEcuId={0}\t\t\t\t\t\\n\\\n".format(EcuID))
-								outFile.write("\tToolId={0}\t\t\t\t\t\\n\\\n".format(ToolID))
+						if True:
+							if gFiledKeyList[i] == "EnterCmd":
+								if splitedList[3].strip() == "CAN":
+									EcuID = splitedList[i].strip()[:4]
+									ToolID = splitedList[i + 1].strip()[:4]
+									outFile.write("\tEcuId={0}\t\t\t\t\t\\n\\\n".format(EcuID))
+									outFile.write("\tToolId={0}\t\t\t\t\t\\n\\\n".format(ToolID))
 
-								outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
-									"\t" + gFiledKeyList[i], splitedList[i].strip()[6:] ))
-								continue
-								pass
-							elif "KWP" in splitedList[3].strip():
-								EcuID = splitedList[i].strip()[2:4]
-								ToolID = splitedList[i].strip()[4:6]
-								outFile.write("\tEcuId={0}\t\t\t\t\t\\n\\\n".format(EcuID))
-								outFile.write("\tToolId={0}\t\t\t\t\t\\n\\\n".format(ToolID))
-
-								if splitedList[3].strip() == "KWP2000":
 									outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
-										"\t" + gFiledKeyList[i], splitedList[i].strip()[6:-2] ))
-								elif splitedList[3].strip() == "KWP_0X":
-									outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
-										"\t" + gFiledKeyList[i], splitedList[i].strip()[2:6] ))
-								else:
-									outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
-										"\t" + gFiledKeyList[i], splitedList[i].strip()))
+										"\t" + gFiledKeyList[i], splitedList[i].strip()[6:]))
+									continue
 									pass
-								continue
-							else:
-								raise ValueError
-							pass
+								elif "KWP" in splitedList[3].strip():
+									EcuID = splitedList[i].strip()[2:4]
+									ToolID = splitedList[i].strip()[4:6]
+									outFile.write("\tEcuId={0}\t\t\t\t\t\\n\\\n".format(EcuID))
+									outFile.write("\tToolId={0}\t\t\t\t\t\\n\\\n".format(ToolID))
+
+									if splitedList[3].strip() == "KWP2000":
+										outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
+											"\t" + gFiledKeyList[i], splitedList[i].strip()[6:-2]))
+									elif splitedList[3].strip() == "KWP_0X":
+										outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
+											"\t" + gFiledKeyList[i], splitedList[i].strip()[2:6]))
+									else:
+										outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
+											"\t" + gFiledKeyList[i], splitedList[i].strip()))
+										pass
+									continue
+								else:
+									raise ValueError
+								pass
+
 
 						outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
 							"\t" + gFiledKeyList[i], splitedList[i]))

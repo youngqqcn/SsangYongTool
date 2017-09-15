@@ -27,7 +27,12 @@ def main():
 					if "KeepLinkCmd" in fieldDict:
 						newLinkCmd = fieldDict["KeepLinkCmd"][0].strip()[6 : -2]
 						fieldDict["KeepLinkCmd"].pop()
-						fieldDict["KeepLinkCmd"].append(newLinkCmd)
+						if (fieldDict["VehEcuId"][0].strip() == "900024"):
+							fieldDict["KeepLinkCmd"].append("3E01")
+						elif fieldDict["VehEcuId"][0].strip() == "900061":
+							fieldDict["KeepLinkCmd"].append("3E")
+						else:
+							fieldDict["KeepLinkCmd"].append(newLinkCmd)
 					if "ComPin" in fieldDict:
 						from src3.ComPin import CalcComPin
 						newComPin = CalcComPin( fieldDict["ComPin"][0].strip() )

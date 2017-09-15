@@ -12,6 +12,7 @@ Description:
 
 from collections import OrderedDict
 from lib.mytool6 import *
+from lib.mytool10 import TabTextTool
 
 
 
@@ -22,12 +23,11 @@ gDsFilPath = "../txt/DS_Info.txt"
 
 gVerInfoFieldNameList = [
 		"No",
-		"???1",
 		"EcuId",
 		"???2",
 		"VerCmd",
 		"VerReply",
-		"VerExp"
+		"VerExp",
 ]
 
 gDtcFiledNameList = [
@@ -129,6 +129,8 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 
 
 					# 处理版本信息命令
+					if (eachInfoDict["EcuId"].strip() == "900024") | ((eachInfoDict["EcuId"].strip() == "900061") ):
+						eachInfoDict["VerCmd"] = eachInfoDict["VerCmd"].strip()[8 : -2]
 					if eachInfoDict["VerCmd"].strip()[0] == "8":
 						eachInfoDict["VerCmd"] = eachInfoDict["VerCmd"].strip()[6 : -2]
 					if eachInfoDict["VerCmd"].strip()[0:2] == "07":

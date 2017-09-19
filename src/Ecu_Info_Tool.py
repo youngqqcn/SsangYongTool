@@ -29,7 +29,7 @@ gFiledKeyList = [
 	"DtcReply",
 	"DtcBegin",
 	"DtcLen",
-	"Unknown2",
+	"DtcGap",
 	"Unknown3",
 	"ClearDtcCmd",
 	"ClearReply",

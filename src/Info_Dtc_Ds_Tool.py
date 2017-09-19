@@ -16,7 +16,7 @@ from lib.mytool10 import TabTextTool
 
 
 
-gVerInfoFilePath = "../txt/System_Info.txt"
+gVerInfoFilePath = "../txt/System_Info_New.txt"
 gDtcFilePath = "../txt/Ecu_Dtc.txt"
 gDsFilPath = "../txt/DS_Info.txt"
 

@@ -229,11 +229,14 @@ def ReadTabTextFile(filePath):
 
 
 
+
 def main():
 
 	GetFuncFlag()
 	ReadTabTextFile("../txt/Ecu_Info.txt")
 
+	from tkMessageBox import showinfo
+	showinfo(u'温馨提示', u'请继续执行src/Deal_Ecu_Info.py\n以完成对doc/out_Ecu_Info.txt的处理.(^_^) ')
 	pass
 
 if __name__ == "__main__":

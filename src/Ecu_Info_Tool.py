@@ -189,8 +189,12 @@ def ReadTabTextFile(filePath):
 									outFile.write("\tToolId={0}\t\t\t\t\t\\n\\\n".format(ToolID))
 
 									if splitedList[3].strip() == "KWP2000":
-										outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
-											"\t" + gFiledKeyList[i], splitedList[i].strip()[6:-2]))
+										if splitedList[2].strip() == "900061": #900061是80形式的
+											outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
+												"\t" + gFiledKeyList[i], splitedList[i].strip()[8:-2]))
+										else:
+											outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
+												"\t" + gFiledKeyList[i], splitedList[i].strip()[6:-2]))
 									elif splitedList[3].strip() == "KWP_0X":
 										outFile.write("{0}={1}\t\t\t\t\t\\n\\\n".format(
 											"\t" + gFiledKeyList[i], splitedList[i].strip()[2:6]))

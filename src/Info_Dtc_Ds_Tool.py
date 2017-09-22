@@ -56,7 +56,7 @@ gDsFieldNameList = [
 		"DsMode",
 		"????4",  # ???
 		"????5",  # ???
-		"????6",  # ???
+		"DsUnit",  #
 		"????7"  # 无用
 ]
 
@@ -204,10 +204,10 @@ def WriteData(inVerDict, inDtcDict, inDsDict):
 						eachDsDict["DsCmd"] = eachDsDict["DsCmd"].strip()[6:]
 
 
-					outFile.write("{0},{1},{2},{3},{4},{5},{6}\t\t\\n\\\n".format(
+					outFile.write("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}\t\t\\n\\\n".format(
 						eachDsDict["NO"], eachDsDict["DsName"], eachDsDict["DsCmd"],
 						eachDsDict["Reply"], eachDsDict["CtrlByte"], eachDsDict["Length"],
-						eachDsDict["DsMode"],
+						eachDsDict["DsMode"], eachDsDict["DsUnit"], eachDsDict["k1"], eachDsDict["k2"]
 					))
 					iCount += 1
 			else:

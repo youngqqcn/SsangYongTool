@@ -46,7 +46,10 @@ def main():
 						fieldDict["ReadDtcCmd"].pop()
 						fieldDict["ReadDtcCmd"].append(newReadDtcCmd)
 					if "ClearDtcCmd" in fieldDict:
-						newClearDtcCmd = fieldDict["ClearDtcCmd"][0].replace(';', '').strip()[6: -2]
+						if fieldDict["ClearDtcCmd"][0].strip()[0 : 2] == "80": #80系列
+							newClearDtcCmd = fieldDict["ClearDtcCmd"][0].replace(';', '').strip()[8 : -2]
+						else: #8X系列
+							newClearDtcCmd = fieldDict["ClearDtcCmd"][0].replace(';', '').strip()[6 : -2]
 						fieldDict["ClearDtcCmd"].pop()
 						fieldDict["ClearDtcCmd"].append(newClearDtcCmd)
 

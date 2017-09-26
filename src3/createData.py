@@ -70,6 +70,9 @@ def GetHistoryCmdData(inEcuId ):
 
 
 
+
+
+
 def main():
 
 	tt = TextTool("../doc/tmp/out_Ecu_Info.txt")
@@ -81,7 +84,7 @@ def main():
 	tmpDict = tt.allSectDictOfFile
 	for sectKey in tmpDict:
 		for fieldKey in tmpDict[sectKey]:
-			ecuId = tmpDict[sectKey][fieldKey]["EcuId"][0].strip()
+			ecuId = tmpDict[sectKey][fieldKey]["VehEcuId"][0].strip()
 			if int(ecuId, 10) <= 900010:continue
 			protName = tmpDict[sectKey][fieldKey]["ProtocolName"][0].strip()
 			bauteRate = tmpDict[sectKey][fieldKey]["BauteRate"][0].strip()
@@ -104,7 +107,7 @@ def main():
 
 				#写入原来的平台数据(除底层配置信息以外)
 				# 如果不想保留原来平台数据,注释此句即可
-				outFile.writelines(GetHistoryCmdData(ecuId))
+				#outFile.writelines(GetHistoryCmdData(ecuId))
 
 	pass
 

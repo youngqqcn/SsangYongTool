@@ -219,4 +219,9 @@ if __name__ == "__main__":
 
 	main()
 
+
+	from tkMessageBox import showinfo
+	showinfo(u'温馨提示', u'请继续执行src6/DealExpress.py\n以完成对doc/tmp/out_Express.txt的处理.(^_^) ')
+	pass
+
 	pass

@@ -165,6 +165,7 @@ class TabTextTool:
 	#处理以tab键分隔的文件
 	#处理制表符分隔的文件类
 	#数据结构: 一行一个列表
+	[{k1:v1, k2:v2, k3:v3}, {k1:v1, k2:v2, ...}, {},... ]
 	'''
 
 	class LengthNotMatchError(RuntimeError):

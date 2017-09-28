@@ -511,3 +511,16 @@ def MyHexPlusPlus(inArg, fillLength=1):
 	if (len(tmpStr) & 1):
 		tmpStr = '0' + tmpStr
 	return Add0x(tmpStr)
+
+
+
+def ShowMessageBox(titleText, contentText):
+	'''
+	显示一个提示对话框
+	:param titleText:  标题文本
+	:param contentText:  提示内容文本
+	:return: 
+	'''
+	from tkMessageBox import showinfo
+	showinfo(titleText, contentText)
+	pass

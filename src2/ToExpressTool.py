@@ -9,7 +9,10 @@ from collections import OrderedDict
 from lib.mytool7 import TextTool
 from lib.mytool7 import MyHexPlus
 
-def Mode1(DsNo, k1, k2, k4, inLen):
+import os
+
+
+def Mode1(ecuId, DsNo, k1, k2, k4, inLen):
 	'''
 	:param DsNo: 编号, 用于错误定位
 	:param k1: k1  系数1
@@ -20,6 +23,11 @@ def Mode1(DsNo, k1, k2, k4, inLen):
 	'''
 
 	if "1" == str(inLen):
+
+		if DsNo == "615":  # (-0.75)*x + 54  不行
+			retExp = "float y; BYTE x; y=54-0.75*x;"
+			return retExp
+
 		if "HEX" in k4:
 			retExp = "string y; BYTE x; y=HEX(x);"  #以16进制显示
 		elif ("." in k1) | ("." in k2):
@@ -37,6 +45,16 @@ def Mode1(DsNo, k1, k2, k4, inLen):
 		#retExp = "int y; BYTE x1,x2; y = (x1 << 8 & 0xFF00) + (x2 & 0xFF)"   #底层算法也不支持左移和右移
 		#retExp = "int y; char x1,x2; y=((x1*256)&0xFF00)+(x2&0xFF);" #支持 "char"????
 
+		##############
+		if DsNo in ["590", "591", "592", "593"]: #这几个是按照大端方式
+			retExp = "float y; BYTE x1,x2; y=(((x1*256)&0xFF00)+(x2&0xFF))*({0})+({1});".format(k1, k2)
+			return retExp
+
+		if ecuId in ["900031", "900034", "900044", "900052"]:
+			retExp = "float y; BYTE x1,x2; y=(((x1*256)&0xFF00)+(x2&0xFF))*({0})+({1});".format(k1, k2)
+			return retExp
+
+		#############
 
 		#此处用小端, 也就是说, 在数据流代码实现时, 就按普通的方式传入参数即可, 无需改变入参x1, x2的顺序
 		if ("." in k1) | ("." in k2):
@@ -177,12 +195,17 @@ def main():
 
 	tmpDict = tt.allSectDictOfFile
 
+
+	if os.path.exists("../doc/tmp/out_Express.txt"):
+		os.remove("../doc/tmp/out_Express.txt")
+
 	outFile = open("../doc/tmp/out_Express.txt", "w")
 
 	for i in range(303, 1177+1):  #忽略Ecu 为 90001~900010
 		tmpSectKey = "0xFF,0xFF,0xFF,0xFF,{0}".format(MyHexPlus(i))
 		if tmpSectKey in tmpDict:
 
+			tmpEcuId= tmpDict[tmpSectKey]["Netlayer"]["EcuID"][0].strip()
 			tmpDsNo = tmpDict[tmpSectKey]["Netlayer"]["NO"][0].strip()
 			tmpK1 = tmpDict[tmpSectKey]["Netlayer"]["k1"][0].strip()
 			tmpK2 = tmpDict[tmpSectKey]["Netlayer"]["k2"][0].strip()
@@ -193,7 +216,7 @@ def main():
 			tmpMode = tmpDict[tmpSectKey]["Netlayer"]["DsMode"][0].strip()
 
 			if tmpMode == '1':
-				retExp = Mode1(tmpDsNo,tmpK1, tmpK2, tmpK4, tmpLen)
+				retExp = Mode1(tmpEcuId, tmpDsNo,tmpK1, tmpK2, tmpK4, tmpLen)
 			elif tmpMode == '2':
 				continue
 			elif tmpMode == '3':
@@ -225,3 +248,7 @@ if __name__ == "__main__":
 	pass
 
 	pass
+
+'''
+大江东去,浪淘尽,千古风流人物.
+'''

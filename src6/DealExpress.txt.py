@@ -7,13 +7,16 @@ Description:none
 '''
 
 import  re
-
+import os
 
 
 def main():
 
 	pattern = re.compile(r'x&0x[0-Z]{1,2}==')
 	pattern2 = re.compile(r'\+\(\-.*?\)')
+
+	if os.path.exists("../doc/tmp/new_out_Express.txt"):
+		os.remove("../doc/tmp/new_out_Express.txt")
 
 	with open("../doc/tmp/out_Express.txt", "r") as inFile:
 		lineList = inFile.readlines()

@@ -241,6 +241,12 @@ def main(dirName):
 							keyWord = hex(int(tmpEnterCmd.strip()[6: 8], 16) + 0x40)[2:]
 							tmpEnterReply = "Ans: " + MakeAnsCmd(protName, ecuId, toolId, keyWord)
 
+							if vehEcuId in ["900039", "900041"]: #奇葩
+								tmpDsReqCmd = "Req: " + AddSpace(eachLineDict["DsCmd"].strip())
+								keyWord = hex(int(eachLineDict["DsCmd"].strip()[6: 8], 16) + 0x40)[2:]
+								tmpDsAnsCmd = "Ans: " + MakeAnsCmd(protName, "01", "F3", keyWord)
+
+
 							# 控制每条数据流命令只有一个回复
 							if eachLineDict["DsCmd"].strip() not in CtrlDsCmdDict[vehEcuId]:
 								CtrlDsCmdDict[vehEcuId].append(eachLineDict["DsCmd"].strip())
@@ -253,6 +259,10 @@ def main(dirName):
 						except:
 							pass
 
+					if vehEcuId in ["900035","900036","900039", "900040", "900041" ]: #"900044"
+						outFile.write("\n\n;;很奇怪的侦测命令;;\n")
+						outFile.write("Req:82 10 F1 21 B0 54\n")
+						outFile.write("Ans:BF F1 10 61 {0}\n\n".format(" FF "*64))
 
 	pass
 

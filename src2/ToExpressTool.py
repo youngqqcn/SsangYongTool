@@ -46,7 +46,7 @@ def Mode1(ecuId, DsNo, k1, k2, k4, inLen):
 		#retExp = "int y; char x1,x2; y=((x1*256)&0xFF00)+(x2&0xFF);" #支持 "char"????
 
 		##############
-		if DsNo in ["590", "591", "592", "593"]: #这几个是按照大端方式
+		if DsNo in ["590", "591", "592", "593", "1153"]: #这几个是按照大端方式
 			retExp = "float y; BYTE x1,x2; y=(((x1*256)&0xFF00)+(x2&0xFF))*({0})+({1});".format(k1, k2)
 			return retExp
 

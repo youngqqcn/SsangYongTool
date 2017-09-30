@@ -273,6 +273,33 @@ class RootMenu:
 	RootMenu说明: 使用此类时, root菜单文件的首行必须是"车名", 
 	             如果有多个"车"(不是车型), 则只要把
 	             __init__函数中, lineList.remove(lineList[0]) 注释掉即可
+	
+	数据结构:
+	{
+	车名1: 
+		{
+			车型1 : 
+			{
+				系统1:
+				{
+					Ecu名1 : [ecuId1, ecuId2, ...]
+					Ecu名2 : [ecuId1, ecuId2, ...]
+					...
+				},
+				系统2:
+				{
+				}
+			},  
+			
+			车型2 : {},
+		}
+	车名2:
+		{
+			...
+		}
+	}
+	
+	
 	'''
 
 	def __init__(self, inFilePath, isOrder=True):
